@@ -32,13 +32,13 @@ journal, including its name, quartile, SJR rating, impact factor, country, regio
 First, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/TheCodingHornet/scimagojrtool.git
+git clone https://github.com/TheCodingHornet/Scimagojr.git
 ```
 
 Next, navigate into the cloned directory:
 
 ```bash
-cd scimagojrtool
+cd Scimagojr
 ```
 
 Then, install the required Python packages:

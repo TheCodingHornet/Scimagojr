@@ -112,15 +112,15 @@ class MainWindow(QMainWindow):
         cursor = db.cursor()
 
         # Create the directory if it does not exist
-        if not os.path.isdir(settings.tmpfolder):
-            os.makedirs(settings.tmpfolder)
+        if not os.path.isdir(settings.temporary_folder):
+            os.makedirs(settings.temporary_folder)
 
         # Download the file
-        response = requests.get(settings.url)
+        response = requests.get(settings.data_url)
         response.raise_for_status()
 
         # Save the file
-        with open(settings.filename, "wb") as f:
+        with open(settings.csv_file_path, "wb") as f:
             f.write(response.content)
 
         # Delete all records from the journaux_categories and journaux_areas tables
@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
         cursor.execute("DELETE FROM journaux_areas")
 
         # Register the file in the database
-        with open(settings.filename, 'r') as file:
+        with open(settings.csv_file_path, 'r') as file:
             reader = csv.DictReader(file, delimiter=';')
             for row in reader:
                 # Check if the journal already exists

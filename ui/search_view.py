@@ -269,9 +269,11 @@ class SearchView(QDialog):
             where_clauses.append("journaux.region = ?")
             params.append(region)
 
+        withcat = False
+
         if categories:
-            where_clauses.append(
-                "journaux_categories.label_category IN ({})".format(', '.join(['?'] * len(categories))))
+            withcat = True
+            where_clauses.append("journaux_categories.label_category IN ({})".format(', '.join(['?'] * len(categories))))
             params.extend(categories)
 
         if quartile != '-':
@@ -289,6 +291,17 @@ class SearchView(QDialog):
 
         # Finalize query
         query += " GROUP BY journaux.id"
+
+        if withcat:
+            query += " HAVING COUNT(DISTINCT journaux_categories.label_category) = ?"
+            params.append(len(categories))
+
+
+            #AND COUNT(DISTINCT CASE WHEN categories NOT IN (cat1, cat2, cat3) THEN categories END) = 0
+            #AND COUNT(DISTINCT categories) = (SELECT COUNT(DISTINCT categories) FROM journaux WHERE journal_id = journaux.journal_id);"
+
+        print(query)
+        print(params)
 
         # Execute the query
         db = sqlite3.connect(settings.database)
